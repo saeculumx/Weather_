@@ -10,7 +10,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -18,6 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,19 +31,23 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+
 public class WeatherHttpHandler extends Service {
+    Intent intent = new Intent();
+    ArrayList<ForeCastWeather> forecastArrayList = new ArrayList<>();
+    private MutableLiveData<Double> tempLiveData = new MutableLiveData<>();
     WeatherInfo weatherInfo = new WeatherInfo();
     WeatherAlarms weatherAlarm = new WeatherAlarms();
     public static String uul;
-    double lat;
-    double lon;
-    String exclude ="hourly,minutely";
-    String units;
-    String lang;
+    static double lat;
+    static double lon;
+    static String exclude ="hourly,minutely";
+    static String units;
+    static String lang;
     boolean alarmExist = false;
-    String url = "https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+lon+"&exclude="+exclude+"&appid=70742a4ee46a7faef64cb6003f3b8f4f&units="+units+"&lang="+lang+"";
+    static String url = "https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+lon+"&exclude="+exclude+"&appid=70742a4ee46a7faef64cb6003f3b8f4f&units="+units+"&lang="+lang+"";
     public WeatherHttpHandler(){}
-    public static String str_receiverH = "ViewModel.TestingAct";
+    public static String str_receiverH = "Acts.TestingAct";
     //Intent intent = new Intent(str_receiverH);
     @Nullable
     @Override
@@ -48,19 +58,26 @@ public class WeatherHttpHandler extends Service {
     public void onCreate() {
         System.out.println("WHH: ONCreate");
         super.onCreate();
+        this.intent = new Intent();
         registerReceiver(locationBroadcastReceiver,new IntentFilter(LocationAcquire.str_receiver));
         getWeatherInfoFromJson();
+        intent.putExtra("tempForTest",getWeatherInfoFromJson().getTemp());
         //intent = new Intent(str_receiverH);
     }
-
+    //private class timerTask extends TimerTask
+    //{
+    //    @Override
+    //    public void run() {
+    //        getWeatherInfoFromJson();
+    //    }
+    //}
     @Override
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(locationBroadcastReceiver);
     }
-
     OkHttpClient client = new OkHttpClient();
-    public static String str_receiver = "ViewModel.TestingAct";
+    public static String str_receiver = "Acts.TestingAct";
     public WeatherHttpHandler(double lat, double lon, String lang, String units){
         this.lang = lang;
         this.lat = lat;
@@ -71,27 +88,35 @@ public class WeatherHttpHandler extends Service {
         setLon(lon);
         setUnits(units);
     }
-   //private void updateValue(WeatherInfo weatherInfo)
-   //{
-   //    intent.putExtra("temp",weatherInfo.getTemp()+"");
-   //    intent.putExtra("felt",weatherInfo.getFelt()+"");
-   //    intent.putExtra("max",weatherInfo.getHigh()+"");
-   //    intent.putExtra("min",weatherInfo.getLow()+"");
-   //    intent.putExtra("hum",weatherInfo.getHum()+"");
-   //    intent.putExtra("pre",weatherInfo.getPressure()+"");
-   //    intent.putExtra("wcon",weatherInfo.getWeatherCon()+"");
-   //    intent.putExtra("wcondes",weatherInfo.getWeatherConDes()+"");
-   //    if (alarmExist) {
-   //        intent.putExtra("alatitle", weatherAlarm.getAlarmTitle() + "");
-   //        intent.putExtra("alabody",weatherAlarm.getAlarmBody()+"");
-   //        intent.putExtra("sou",weatherAlarm.getSourser()+"");
-   //    }
-   //    System.out.println("WHH: BrodCast Sended");
-   //    sendBroadcast(intent);
-   //}
+    public MutableLiveData<Double> getCurrentTemp()
+    {
+        if (tempLiveData == null)
+        {
+            tempLiveData = new MutableLiveData<>();
+        }
+        return tempLiveData;
+    }
+  //private void updateValue(WeatherInfo weatherInfo)
+  //{
+  //    intent.putExtra("temp",weatherInfo.getTemp()+"");
+  //    intent.putExtra("felt",weatherInfo.getFelt()+"");
+  //    intent.putExtra("max",weatherInfo.getHigh()+"");
+  //    intent.putExtra("min",weatherInfo.getLow()+"");
+  //    intent.putExtra("hum",weatherInfo.getHum()+"");
+  //    intent.putExtra("pre",weatherInfo.getPressure()+"");
+  //    intent.putExtra("wcon",weatherInfo.getWeatherCon()+"");
+  //    intent.putExtra("wcondes",weatherInfo.getWeatherConDes()+"");
+  //    if (alarmExist) {
+  //        intent.putExtra("alatitle", weatherAlarm.getAlarmTitle() + "");
+  //        intent.putExtra("alabody",weatherAlarm.getAlarmBody()+"");
+  //        intent.putExtra("sou",weatherAlarm.getSourser()+"");
+  //    }
+  //    System.out.println("WHH: BrodCast Sended "+weatherInfo.getTemp());
+  //    sendBroadcast(intent);
+  //}
     public WeatherInfo getWeatherInfoFromJson()
     {
-        System.out.println(uul+">>>");
+        //System.out.println(uul+">>>");
         if (uul!=null) {
             Request request = new Request.Builder().url(uul).build();
             Response response = null;
@@ -105,7 +130,7 @@ public class WeatherHttpHandler extends Service {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String resurl = request.url().toString();
-                    System.out.println(resurl);
+                    //System.out.println(resurl);
                     String jsonData = response.body().string();
                     //System.out.println("WHH: Call Response Json: "+jsonData);
                     //System.out.println("/WER: JSON CONTENT:<<>>" + jsonData + "/n" + "<<<>>>");
@@ -116,7 +141,6 @@ public class WeatherHttpHandler extends Service {
                     }
                 }
             });
-            //updateValue(weatherInfo);
             return weatherInfo;
         }
         Request request = new Request.Builder().url(url).build();
@@ -131,7 +155,7 @@ public class WeatherHttpHandler extends Service {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String resurl = request.url().toString();
-                System.out.println(resurl);
+                //System.out.println(resurl);
                 String jsonData = response.body().string();
                 //System.out.println("WHH: Call Response Json: "+jsonData);
                 //System.out.println("/WER: JSON CONTENT:<<>>" + jsonData + "/n" + "<<<>>>");
@@ -142,7 +166,6 @@ public class WeatherHttpHandler extends Service {
                 }
             }
         });
-        //updateValue(weatherInfo);
         return weatherInfo;
         }
     public void Decode(String content) throws JSONException{
@@ -185,6 +208,42 @@ public class WeatherHttpHandler extends Service {
         System.out.println("WHH:/ ALARM SET "+jsonObject.has("alerts"));
         //System.out.println("WER: CONT: "+alarmTitle+" "+des+" "+sourser);
         System.out.println("WHH: OKHTTP CKECK DATA: "+" / "+temp+hum+" / "+felt+max+" / "+min+" / "+weatherCon+" / "+weatherConDes+" / "+pressure);
+        int mjv = daily.length();
+        ArrayList<Integer> dtArray = new ArrayList<>();
+        for (int i =1;i<mjv;i++) {
+            JSONObject dailyWeather = daily.getJSONObject(i);
+            JSONObject dailyWeatherTemp = dailyWeather.getJSONObject("temp");
+            double forecastMax = dailyWeatherTemp.getDouble("max");
+            double forecastMin = dailyWeatherTemp.getDouble("min");
+            int dt = dailyWeather.getInt("dt");
+            ForeCastWeather foreCastWeather = new ForeCastWeather(forecastMax, forecastMin, dt);
+            if (forecastArrayList.size() != 0 && forecastArrayList.size() < 8) {
+                for (int o = 0; o < forecastArrayList.size(); o++) {
+                    if (foreCastWeather.getDt() == forecastArrayList.get(o).getDt()) {
+                        forecastArrayList.get(o).setHigh(foreCastWeather.getHigh());
+                        forecastArrayList.get(o).setLow(foreCastWeather.getLow());
+                    } else {
+                        forecastArrayList.add(foreCastWeather);
+                    }
+                }
+            }
+            if (forecastArrayList.size() == 0) {
+                if (dt!=1621422000) {
+                    forecastArrayList.add(foreCastWeather);
+                }
+            } else {
+                for (int o = 0; o < forecastArrayList.size(); o++) {
+                    if (foreCastWeather.getDt() == forecastArrayList.get(o).getDt()) {
+                        forecastArrayList.get(o).setHigh(foreCastWeather.getHigh());
+                        forecastArrayList.get(o).setLow(foreCastWeather.getLow());
+                    }
+                }
+            }
+        }
+    }
+    public ArrayList<ForeCastWeather> getForecastArrayList()
+    {
+        return forecastArrayList;
     }
    // private void updateBroadcastWeather(WeatherInfo weatherInfo)
    // {
@@ -215,8 +274,8 @@ public class WeatherHttpHandler extends Service {
             setLang(lang);
             setLat(lat);
             uul = ("https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+lon+"&exclude="+exclude+"&appid=70742a4ee46a7faef64cb6003f3b8f4f&units="+units+"&lang="+lang+"");
-            System.out.println(uul+"<<<");
-            System.out.println("WHH: Set: Lat = " + lat);
+            //System.out.println(uul+"<<<");
+            //System.out.println("WHH: Set: Lat = " + lat);
         }
     };
     public void setLon(double lon) {

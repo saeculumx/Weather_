@@ -34,7 +34,7 @@ public class LocationAcquire extends Service implements LocationListener {
     double latitude, longitude;
     LocationManager locationManager;
     Location location;
-    public static String str_receiver = "ViewModel.TestingAct";
+    public static String str_receiver = "Acts.TestingAct";
     public static String str_receiverW = "Model.WeatherHttpHandler";
     Intent intent = new Intent(str_receiver);
     Intent intent2 = new Intent(str_receiverW);
@@ -131,18 +131,23 @@ public class LocationAcquire extends Service implements LocationListener {
                             e.printStackTrace();
                         }
                         lang = Locale.getDefault().getLanguage();
-                        assert addresses != null;
-                        cityInfo= addresses.get(0).getLocality();
-                        country = addresses.get(0).getCountryName();
-                        currentLocation.setCityName(cityInfo);
-                        currentLocation.setDisName(country);
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                        currentLocation.setLat((float) latitude);
-                        currentLocation.setLon((float)longitude);
-                        updateValue(location);
-                        System.out.println("/LAB: LAT: "+latitude+" LON: "+longitude+" CITY: "+cityInfo+" "+country);
-                        //locationUpdate(location);
+                        if (addresses!=null) {
+                            cityInfo = addresses.get(0).getLocality();
+                            country = addresses.get(0).getCountryName();
+                            currentLocation.setCityName(cityInfo);
+                            currentLocation.setDisName(country);
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            currentLocation.setLat((float) latitude);
+                            currentLocation.setLon((float) longitude);
+                            updateValue(location);
+                            System.out.println("/LAB: LAT: " + latitude + " LON: " + longitude + " CITY: " + cityInfo + " " + country);
+                            //locationUpdate(location);
+                        }
+                        else
+                        {
+                            System.out.println("NO INFO");
+                        }
                     }
                 }
             }
@@ -161,7 +166,6 @@ public class LocationAcquire extends Service implements LocationListener {
         System.out.println("LAB:/ BrodCast Sended, Value: LA: "+latitude+" LO: "+longitude+" CITY "+cityInfo+" CON "+country+" LANG "+lang);
         sendBroadcast(intent);
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
