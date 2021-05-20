@@ -1,4 +1,4 @@
-# AND_01
+# Weather_
 Nowadays, people rely on the weather forecast to schedule their daily work, transportation and clothing, so I decide to develop an android application which can offer the up-to-date weather information together with the suggestions to the users.  
 
 The system must have:  
