@@ -34,7 +34,6 @@
         <activity
             android:name="Acts.StartAct"
             android:exported="true"
-            android:label="@string/title_activity_start"
             android:theme="@style/Theme.Weather_.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
