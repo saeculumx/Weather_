@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather_</string>
+    <string name="title_activity_side_meun">菜单</string>
+    <string name="navigation_drawer_open">打开导航编辑器</string>
+    <string name="navigation_drawer_close">打开导航编辑器</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">导航栏</string>
+    <string name="action_settings">设置</string>
+    <string name="menu_home">主页</string>
+    <string name="menu_gallery">相册</string>
+    <string name="title_activity_bottom_nav">主活动</string>
+    <string name="menu_slideshow">侧面</string>
+    <string name="title_home">主页</string>
+    <string name="title_dashboard">天气预告</string>
+    <string name="title_notifications">通知</string>
+    <string name="hello_blank_fragment">hi空白组件</string>
+    <string name="title_activity_bottom">主活动</string>
+    <string name="title_activity_start">主页面活动</string>
+    <string name="first_fragment_label">第一个组件</string>
+    <string name="second_fragment_label">第二个组件</string>
+    <string name="next">下一个</string>
+    <string name="previous">前一个</string>
+    <string name="hello_first_fragment">hi,第一个组件</string>
+    <string name="hello_second_fragment">hi,第二个组件</string>
+    <string name="addcity">添加城市</string>
+    <string name="about">关于</string>
+    <string name="forecast">天气预报</string>
+    <string name="min_temperature">最低温度</string>
+    <string name="max_temperature">最高温度</string>
+    <string name="date">时间</string>
+    <string name="messages_header">信息</string>
+    <string name="sync_header">同步</string>
+    <string name="signature_title">你的签名</string>
+    <string name="view_on_github">在Github上查看</string>
+    <string name="send_feedback">发送反馈</string>
+    <string name="felt_temperature">体感温度</string>
+    <string name="pressure">气压</string>
+    <string name="weather_condition">天气状况</string>
+    <string name="feedback">反馈</string>
+    <string name="please_stand_by">请等待</string>
+</resources>

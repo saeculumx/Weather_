@@ -39,12 +39,19 @@
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="reply_title" translatable="false">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    <string name="sync_title" translatable="false">Sync email periodically</string>
+    <string name="attachment_title" translatable="false">Download incoming attachments</string>
+    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
     </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
+    <string name="view_on_github">VIEW ON GITHUB</string>
+    <string name="send_feedback">Send FeedBack</string>
+    <string name="felt_temperature">Felt Temperature</string>
+    <string name="pressure">Pressure</string>
+    <string name="weather_condition">Weather Condition</string>
+    <string name="feedback">FeedBack</string>
+    <string name="please_stand_by">Please stand by</string>
 </resources>
