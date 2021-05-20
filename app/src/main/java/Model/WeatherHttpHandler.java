@@ -228,7 +228,7 @@ public class WeatherHttpHandler extends Service {
                 }
             }
             if (forecastArrayList.size() == 0) {
-                if (dt!=1621422000) {
+                if (dt!=1621422000&&dt!=1621508400) {
                     forecastArrayList.add(foreCastWeather);
                 }
             } else {

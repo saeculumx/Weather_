@@ -1,27 +1,17 @@
 package View;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.location.Geocoder;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -30,19 +20,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.example.weather_.R;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.List;
 
 import Model.ForeCastAdapter;
 import Model.ForeCastWeather;
@@ -50,9 +36,12 @@ import Model.LocationAcquire;
 import Model.WeatherAlarms;
 import Model.WeatherHttpHandler;
 import Model.WeatherInfo;
+import ViewModel.SharedResource;
 
 
 public class HomePageFragment extends Fragment implements ForeCastAdapter.OnListItemClickListener {
+    SharedResource sharedResource;
+    ForeCastFragment foreCastFragment;
     int l = 0;
     ForeCastAdapter foreCastAdapter;
     ArrayList<ForeCastWeather> foreCastWeathers = new ArrayList<>();
@@ -84,6 +73,7 @@ public class HomePageFragment extends Fragment implements ForeCastAdapter.OnList
     int Resid = R.raw.yu;
     Uri uri;
     MutableLiveData<Integer> videoFeed = new MutableLiveData<>();
+    MutableLiveData<ArrayList<ForeCastWeather>> foreCastLiveData = new MutableLiveData<>();
     //
     private WeatherHttpHandler weatherHttpHandler = new WeatherHttpHandler();
     private View view;
@@ -103,6 +93,7 @@ public class HomePageFragment extends Fragment implements ForeCastAdapter.OnList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_home_page, container, false);
+        sharedResource = new SharedResource();
         nestedScrollView = view.findViewById(R.id.NestedScroll);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         textView = view.findViewById(R.id.cardTextView);
@@ -119,12 +110,14 @@ public class HomePageFragment extends Fragment implements ForeCastAdapter.OnList
         System.out.println("STA: Start Done");
         foreCastAdapter = new ForeCastAdapter(foreCastWeathers, HomePageFragment.this);
         recyclerView.setAdapter(foreCastAdapter);
+        //foreCastLiveData.setValue(foreCastWeathers);
         getActivity().registerReceiver(locationBroadcastReceiver, new IntentFilter(LocationAcquire.str_receiver));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 foreCastAdapter = new ForeCastAdapter(foreCastWeathers, HomePageFragment.this);
                 recyclerView.setAdapter(foreCastAdapter);
+                //foreCastLiveData.setValue(foreCastWeathers);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -195,10 +188,14 @@ public class HomePageFragment extends Fragment implements ForeCastAdapter.OnList
             rightView.setText(felt +tail);
             foreCastWeathers = weatherHttpHandler.getForecastArrayList();
             System.out.println("! FoR size: "+foreCastWeathers.size());
-
             foreCastAdapter = new ForeCastAdapter(foreCastWeathers, HomePageFragment.this);
+            if (foreCastWeathers!=null) {
+                System.out.println("SR: DATA SENDED "+ foreCastWeathers.size()+" ");
+                EventBus.getDefault().post(foreCastWeathers);
+            }
+            //foreCastLiveData.setValue(foreCastWeathers);
+            //System.out.println("FCW set, size: "+foreCastWeathers.size()+" If null "+foreCastLiveData);
             recyclerView.setAdapter(foreCastAdapter);
-
             if (weatherCon!=null) {
                 switch (weatherCon) {
                     case "Clouds":
@@ -287,6 +284,22 @@ public class HomePageFragment extends Fragment implements ForeCastAdapter.OnList
     public LiveData<Integer> getVideoFeed()
     {
         return videoFeed;
+    }
+    public LiveData<ArrayList<ForeCastWeather>> getForecastWeathersLiveData()
+    {
+        return foreCastLiveData;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(locationBroadcastReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(locationBroadcastReceiver,new IntentFilter(WeatherHttpHandler.str_receiverH));
     }
 
     @Override

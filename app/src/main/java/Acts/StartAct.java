@@ -235,4 +235,5 @@ public class StartAct extends AppCompatActivity {
             }
         });
     }
+
 }

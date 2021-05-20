@@ -12,11 +12,8 @@ import com.example.weather_.R;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class ForeCastAdapter extends RecyclerView.Adapter<ForeCastAdapter.ViewHolder> {
     //SimpleDateFormat format = new SimpleDateFormat("yyyy / MM / dd");
@@ -40,7 +37,7 @@ public class ForeCastAdapter extends RecyclerView.Adapter<ForeCastAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.forecastviewitem,parent,false);
+        View view = inflater.inflate(R.layout.forecast_view_item,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolderList.add(viewHolder);
         return new ViewHolder(view);
@@ -56,42 +53,48 @@ public class ForeCastAdapter extends RecyclerView.Adapter<ForeCastAdapter.ViewHo
         getTime();
         int fDay;
         fDay = (day+position+1);
-        if (fDay<28&&month==2) {
-            viewHolder.date.setText(year + "/" + month + "/" + (day + position + 1));
-        }
-        if (fDay>28&&month==2)
-        {
-            month++;
-            day = (fDay-28);
-            viewHolder.date.setText(year + "/" + month + "/" + day);
-        }
-        //4/6/9/11
-        if(fDay<30&&(month==4||month==5||month==9||month==11))
-        {
-            viewHolder.date.setText(year + "/" + month + "/" + (day + position + 1));
-        }
-        if (fDay>30&&(month==4||month==5||month==9||month==11))
-        {
-            month++;
-            day = (fDay-30);
-            viewHolder.date.setText(year + "/" + month + "/" + day);
-        }
-        if(fDay<31&&(month==1||month==3||month==6||month==7||month==8||month == 10||month==12))
-        {
-            viewHolder.date.setText(year + "/" + month + "/" + (day + position + 1));
-        }
-        if(fDay>31&&(month==1||month==3||month==6||month==7||month==8||month == 10||month==12))
-        {
-            if (month!=12)
-            {
-                month++;
+        if (month==2) {
+            if (fDay<28) {
+                viewHolder.date.setText(year + "/" + month + "/" + (day + position + 1));
             }
             else
             {
-                month = 1;
+                month++;
+                day = (fDay-28);
+                viewHolder.date.setText(year + "/" + month + "/" + day);
             }
-            day = (fDay-31);
-            viewHolder.date.setText(year + "/" + month + "/" + day);
+        }
+        //4/6/9/11
+        if(month==4||month==5||month==9||month==11)
+        {
+            if (fDay<30) {
+                viewHolder.date.setText(year + "/" + month + "/" + (day + position + 1));
+            }
+            else
+            {
+                month++;
+                day = (fDay-30);
+                viewHolder.date.setText(year + "/" + month + "/" + day);
+            }
+        }
+        if(month==1||month==3||month==6||month==7||month==8||month == 10||month==12)
+        {
+            if (fDay<31) {
+                viewHolder.date.setText(year + "/" + month + "/" + (day + position + 1));
+            }
+            else
+            {
+                if (month!=12)
+                {
+                    month++;
+                }
+                else
+                {
+                    month = 1;
+                }
+                day = (fDay-31);
+                viewHolder.date.setText(year + "/" + month + "/" + day);
+            }
         }
         //
         Double max = BigDecimal.valueOf(foreCastWeatherArrayList.get(position).getCHigh()).setScale(2, RoundingMode.HALF_UP).doubleValue();
