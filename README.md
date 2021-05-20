@@ -20,6 +20,8 @@ The system will not have
 + The ability to have a built-in social network.  
    
 _`Update 2021/03/24`_  
-Legacy code have been removed, The project now only contains core function Weather Data  
-_`Update 2021/03/24`_  
-Compelete movement of code to this new project, 50% page done, base code done
+Legacy code have been removed, The project now only contains core function Weather Data.  
+_`Update 2021/05/19`_  
+Compelete movement of code to this new project, 50% page done, base code done.  
+_`Update 2021/05/20`_  
+App Realease V1.3.1
