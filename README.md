@@ -26,4 +26,8 @@ Legacy code have been removed, The project now only contains core function Weath
 _`Update 2021/05/19`_  
 Compelete movement of code to this new project, 50% page done, base code done.  
 _`Update 2021/05/20`_  
-App Realease V1.3.1
+App Realease V1.3.1  
+_`Update 2021/06/15`_  
+Due to the api provider has no api requests left, the api provider has cahnged the key  
+Solving the issue of duplicated data  
+App Realease V1.3.2
