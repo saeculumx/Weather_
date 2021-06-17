@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ForeCastAdapter extends RecyclerView.Adapter<ForeCastAdapter.ViewHolder> {
-    //SimpleDateFormat format = new SimpleDateFormat("yyyy / MM / dd");
-    //Date curDate = new Date(System.currentTimeMillis());
     Calendar calendar = Calendar.getInstance();
     int year,month,day;
     private ArrayList<ForeCastWeather> foreCastWeatherArrayList ;

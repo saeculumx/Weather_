@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import Model.ForeCastAdapter;
 import Model.ForeCastWeather;
@@ -40,19 +41,11 @@ import ViewModel.SharedResource;
 
 
 public class HomePageFragment extends Fragment implements ForeCastAdapter.OnListItemClickListener {
-    SharedResource sharedResource;
-    ForeCastFragment foreCastFragment;
     int l = 0;
     ForeCastAdapter foreCastAdapter;
     ArrayList<ForeCastWeather> foreCastWeathers = new ArrayList<>();
     private static Dialog dialog;
-    double temp;
-    int hum;
-    double felt;
-    double high;
-    double low;
     String weatherCon;
-    String weatherConDes;
     int pressure;
     double lat;
     String lang;
@@ -71,7 +64,6 @@ public class HomePageFragment extends Fragment implements ForeCastAdapter.OnList
     NestedScrollView nestedScrollView;
     //VideoView videoView;
     int Resid = R.raw.yu;
-    Uri uri;
     MutableLiveData<Integer> videoFeed = new MutableLiveData<>();
     MutableLiveData<ArrayList<ForeCastWeather>> foreCastLiveData = new MutableLiveData<>();
     //
@@ -93,7 +85,6 @@ public class HomePageFragment extends Fragment implements ForeCastAdapter.OnList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_home_page, container, false);
-        sharedResource = new SharedResource();
         nestedScrollView = view.findViewById(R.id.NestedScroll);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         textView = view.findViewById(R.id.cardTextView);
@@ -293,13 +284,13 @@ public class HomePageFragment extends Fragment implements ForeCastAdapter.OnList
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().unregisterReceiver(locationBroadcastReceiver);
+        requireActivity().unregisterReceiver(locationBroadcastReceiver);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().registerReceiver(locationBroadcastReceiver,new IntentFilter(WeatherHttpHandler.str_receiverH));
+        requireActivity().registerReceiver(locationBroadcastReceiver,new IntentFilter(WeatherHttpHandler.str_receiverH));
     }
 
     @Override
